@@ -110,6 +110,9 @@ class Controller(Plugin):
 
     def perform_cue_action(self, key):
         for cue, actions in self.__cue_map.get(key, {}).items():
+            if not self.app.layout.can_trigger_cue(cue):
+                logger.debug("Skipping cue on a different page")
+                continue
             for action in actions:
                 cue.execute(action)
 

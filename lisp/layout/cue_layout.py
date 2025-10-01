@@ -110,6 +110,11 @@ class CueLayout(HasProperties):
         """Set the current page"""
 
     @abstractmethod
+    def can_trigger_cue(self, cue: Cue) -> bool:
+        """Is this cue triggerable?"""
+
+
+    @abstractmethod
     def selected_cues(self, cue_type=Cue):
         """Iterate the selected cues, filtered by type.
 

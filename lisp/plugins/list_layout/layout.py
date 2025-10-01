@@ -240,6 +240,9 @@ class ListLayout(CueLayout):
     def cue_at(self, index):
         return self._list_model.item(index)
 
+    def can_trigger_cue(self, cue: Cue) -> bool:
+        return True
+
     def selected_cues(self, cue_type=Cue):
         for item in self._view.listView.selectedItems():
             yield self._list_model.item(

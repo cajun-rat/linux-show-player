@@ -64,6 +64,7 @@ class CartLayout(CueLayout):
     dbmeters_visible = ProxyProperty()
     accurate_time = ProxyProperty()
     countdown_mode = ProxyProperty()
+    visible_only = ProxyProperty()
 
     def __init__(self, application):
         super().__init__(application)
@@ -127,6 +128,11 @@ class CartLayout(CueLayout):
         self.show_accurate_action.setCheckable(True)
         self.show_accurate_action.triggered.connect(self._set_accurate_time)
         layout_menu.addAction(self.show_accurate_action)
+
+        self.visible_only_action = QAction(parent=layout_menu)
+        self.visible_only_action.setCheckable(True)
+        self.visible_only_action.triggered.connect(self._set_visible_only)
+        layout_menu.addAction(self.visible_only_action)
 
         self._set_countdown_mode(CartLayout.Config["countdownMode"])
         self._set_dbmeters_visible(CartLayout.Config["show.dBMeters"])
@@ -198,6 +204,8 @@ class CartLayout(CueLayout):
             translate("CartLayout", "Show accurate time")
         )
 
+        self.visible_only_action.setText(translate("CartLayout", "Trigger Visible Cues Only"))
+
     @property
     def model(self):
         return self._cart_model
@@ -205,6 +213,13 @@ class CartLayout(CueLayout):
     @property
     def view(self):
         return self._cart_view
+
+    def can_trigger_cue(self, cue: Cue) -> bool:
+        visible_only = self.visible_only_action.isChecked()
+        if not visible_only:
+            return True
+        page, _, _ = self.to_3d_index(cue.index)
+        return page == self._cart_model.current_page
 
     def cue_at(self, index):
         return self._cart_model.item(index)
@@ -325,6 +340,14 @@ class CartLayout(CueLayout):
     @accurate_time.get
     def _get_accurate_time(self):
         return self.show_accurate_action.isChecked()
+
+    @visible_only.set
+    def _set_visible_only(self, enable):
+        self.visible_only_action.setChecked(enable)
+
+    @visible_only.get
+    def _get_visible_only(self):
+        return self.visible_only_action.isChecked()
 
     @seek_sliders_visible.set
     def _set_seek_bars_visible(self, visible):
