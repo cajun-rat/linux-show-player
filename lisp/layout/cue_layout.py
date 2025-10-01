@@ -36,7 +36,7 @@ class CueLayout(HasProperties):
     # Layout short description
     DESCRIPTION = "No description"
     # Layout details (some useful info)
-    DETAILS = ""
+    DETAILS : list[str] = []
 
     CuesMenu = CueContextMenu()
 
