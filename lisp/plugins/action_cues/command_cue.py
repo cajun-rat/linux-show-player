@@ -73,6 +73,7 @@ class CommandCue(Cue):
         command = self.__command()
         if not command:
             return
+        logger.debug("Executing %s", command)
 
         # If no_output is True, discard all the outputs
         std = subprocess.DEVNULL if self.no_output else None
